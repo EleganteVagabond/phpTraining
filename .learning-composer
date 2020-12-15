@@ -1,0 +1,9 @@
+Composer is the equivalent to npm or gem or ...
+
+Configuration
+-uses the composer.json file
+-current list of installed items and versions is stored in the composer.lock file
+
+Commands
+-require adds a dependency
+-install adds all the dependencies in the lock file
