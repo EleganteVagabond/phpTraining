@@ -1,0 +1,6 @@
+Factories
+-separate business logic from construction of things
+-factories contain switch/if statements that can vary what gets created based on what the user wants
+-this requires more polymorphism, e.g. creating subclasses that do one specific task.
+--might be many small files
+-can really improve speed because less branching and if conditionals are set as global flags at startup then modern jvms will eliminate the branching and inline the bytecode

@@ -1,0 +1,124 @@
+PHP 7.3 training courtesy of phptherightway.com
+
+Overview
+-<?php .... ?>
+- __ symbols are "magical" e.g. __autoload()
+-use clone to copy a value e.g. $end = clone $start;
+-magic class methods
+--constructor method is __construct, call parent(super) using parent::__construct()
+--clone method is __clone
+--can make these private to prevent them from being called directly
+-return signature is function [fname](): [return value(s)]
+-keyword use as an include
+-prefixing a variable with ? means it can be null e.g. ?String stringvar = null;
+
+Arrays
+-weakly typed
+-defined as 'array' e.g. private array elements; or function getArray() : array;
+-can have associative arrays (dictionary/map)
+--ex:
+--$user_list = array(
+    'dave' => 'apassword',
+    'steve' => 'secr3t'
+  );
+-in_array method can determine if a value exists in an array
+-convert a single arg to an array e.g. $this->visited[] = $role; // $role is a single object
+
+Loops
+-for written in standard notation e.g. for ($i=0; $i < 5; $i++)
+-foreach allows iterating e.g. foreach($characters as $char)
+-foreach returning a specific value e.g. foreach ($user_list as $user => $pass)
+--or used to grab index and value from a normal array e.g. $foo = [1,2,3]; foreach($foo as $i => $value) ... where $i is index and $value is the value at that index
+
+Namespaces
+-namespaces are used to define unique pathways to files to eliminate collisions (https://www.php-fig.org/psr/psr-4/)
+--ex namespace hey\ho\lets\go
+-to access items in the global namespace, use the \ operator e.g. function fopen() { \fopen()} to call the global fopen if we overrode it for some reason
+--Exception class needs to be escaped in a namespaced class
+
+CLI
+-access to command line via $argc and $argv $argv[1] = filename
+-exit([error code])
+
+Dependency Management
+-two options, Composer and PEAR. Composer seems to be the flavor of the day
+-composer install to install specified items with the versions provided in the .lockfile
+-composer update to update, don't use this in production because you might get different versions than the .lock file
+
+Printing info to screen
+-Use var_dump to print a value as well as a minimal stack trace showing the line the print came from
+
+Operators/Symbols (https://stackoverflow.com/questions/3737139/reference-what-does-this-symbol-mean-in-php)
+-==/!= is non strict, will return true if truthy or one value can be coerced into the other, e.g. 5 == '5'  or 0 == false or null == false
+-===/!== is strict, match on type and value
+-NAN is the only thing that is always false in comparison to other things except the value true (weird...)
+-standard ternary op [condition] ? [truth value] : [false value]
+-shortcut ternary op [condition] ?: [false value] returns condition if it evalues to true so $x > 0 ? $x : null -> $x ?: null
+-"=>" is used like a ":" in ruby for setting key/value pairs
+-"@" operator can be used to override default exception behavior e.g. echo @$foo['bar'] does nothing if foo['bar'] doesn't exist
+
+Null tests
+-gettype() returns NULL if undefined or set to NULL explicitly
+-empty() returns true if the length of something is 0 (or NULL), e.g. "", array(), var $x, 0 are all "empty"
+-is_null() returns true if gettype returns NULL
+-isset() returns true for anything that is defined, isset() === !is_null()
+
+Switch statements
+-perform an == (truthy) comparison and therefore are not type strict
+-break or return is required unless you want to run subsequent cases
+-ex (match for 3 runs default as well)
+--case 1: ... break;
+--case 2: ... break;
+--case 3: ...
+--default:
+
+Strings
+-concatentation operator is '.' e.g. "Hi"."there"."how"."are"."you" => Hitherehowareyou
+--has same precedence as + operator, e.g. echo "result: " . $var + 3 => 3
+--can concat numbers this way e.g. 1 . 2 => 12 but 1.2 => 1.2 !
+-can use concat assign as '.='
+-for long string constants use concat, not concat assign to break up the string across multiple lines
+-can concat using interpolation e.g. "Name is ${name}". Only works with double quotes
+-single quote strings are literals and no attempts to process special characters or variables are made
+-can intermix single and double quote e.g. 'Hello ' . "$person" . ' how are you today?' . "\n"
+-Nowdoc syntax allows multi-line initialized and terminated by an EOD marker on its own line e.g. $str = <<< 'EOD' // note triple chevron <<<
+--does not parse interpolation or special characters
+-heterodoc syntax is the same as nowdoc but processes special chars (like a double quote)
+-use is_string method to test if something is actually a string
+--use ctype_digit to check if any of the characters are numeric
+---other ctype functions exist
+--use is_int to check if the string can be coerced into an int
+
+Design patterns
+-taken from https://designpatternsphp.readthedocs.io/en/latest/README.html
+-don't use static methods/classes because they cannot be mocked easily for unit testing
+
+DateTime
+-DateTime objects cannot be coerced into strings, must explicitly convert using the format method
+--there are many standard formats defined in DateTimeInterface https://www.php.net/manual/en/class.datetimeinterface.php#datetime.constants.types
+
+Observer/Subject
+-built in classes SplObserver and SplSubject allow for decoupled interchanges ala message queues
+
+Databases
+-PDO is an abstraction interface so you don't have to worry about vendor or drivers
+-provides a way to filter input, escaping harmful characters, and restricting values to a defined type e.g. PDO::PARAM_INT
+-free up connection resources by destorying the connection and set the variable to null so it can be garbage collected
+
+Exceptions
+-handled the java way e.g. try catch finally
+-can catch multiple exceptions using the pipe | operator e.g. catch(ExceptionOne $1 | ExceptionTwo $2)
+-finally is always executed, even if a try or catch block issues a return statement
+-can create a global handler using set_exception_handler() to define a global catch block, could be used for logging or to increase/decrease the severity of an exception
+
+Security
+-https://phpsecurity.readthedocs.io/en/latest/Introduction.html#yet-another-php-security-book
+-https://owasp.org/www-project-cheat-sheets/
+-don't trust html5 form validators because a hacker could just falsify a post request that bypasses the view layer
+--makes sense to log these kinds of validation violations because they indicate a malicious intent since in normal use it should never happen
+-always check type as well as value because php is not strongly typed
+-php provides data filtering functions: https://www.php.net/book.filter
+--use filter_var([val],[validation type],[options]) to filter a variable's value
+--use filter_input([filter type],[value]) to filter input from forms
+-be sure to verify the identity of a server we want to trust using a certification authority
+-be careful when deserializing data
