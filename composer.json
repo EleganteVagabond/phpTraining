@@ -1,4 +1,8 @@
 {
+    "autoload": {
+        "psr-4" : { "Polymorphism\\":"phpTheRightWay/src/polymorphism/"},
+        "classmap" : ["phpTheRightWay/src/polymorphism/"]
+    },
     "require-dev": {
         "phpunit/phpunit": "^9.5"
     },

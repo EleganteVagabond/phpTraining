@@ -11,6 +11,8 @@ Overview
 -return signature is function [fname](): [return value(s)]
 -keyword use as an include
 -prefixing a variable with ? means it can be null e.g. ?String stringvar = null;
+-variables prefixed with $ e.g. $var
+--can use $$ syntax to access a var or method or class using a string e.g. $value ="val"; $varname="value"; echo $$varname; // prints 'val'
 
 Arrays
 -weakly typed
@@ -23,6 +25,10 @@ Arrays
   );
 -in_array method can determine if a value exists in an array
 -convert a single arg to an array e.g. $this->visited[] = $role; // $role is a single object
+--can also use this syntax to append to an array
+-can access elements using either [] or {} syntax
+-if you define an array without using [], e.g. $var = array() then you get an associative array (like a map)
+--to get an indexed array you must use the [] = form e.g. $var[] = array()
 
 Loops
 -for written in standard notation e.g. for ($i=0; $i < 5; $i++)
@@ -35,6 +41,7 @@ Namespaces
 --ex namespace hey\ho\lets\go
 -to access items in the global namespace, use the \ operator e.g. function fopen() { \fopen()} to call the global fopen if we overrode it for some reason
 --Exception class needs to be escaped in a namespaced class
+-be sure to put namespace declaration at top of file, before any use statements
 
 CLI
 -access to command line via $argc and $argv $argv[1] = filename
