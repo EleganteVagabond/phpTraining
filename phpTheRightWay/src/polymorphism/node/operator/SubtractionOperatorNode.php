@@ -7,7 +7,7 @@ use Polymorphism\Node\OperatorNode;
 /**
  * Operator node that handles multiplication
  */
-class MultiplicationOperatorNode extends OperatorNode {
+class SubtractionOperatorNode extends OperatorNode {
 
     public function evaluate(): float
     {

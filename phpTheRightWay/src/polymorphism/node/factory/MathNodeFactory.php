@@ -21,18 +21,25 @@ class MathNodeFactory
     {
         // only initialize once
         if (self::$operators == null) {
-            $operators = $this->loadOperatorClasses();
+            self::$operators = $this->loadOperatorClasses();
+            echo "loaded operators ".count(self::$operators);
         }
         // only initialize once
         if (self::$operatorStrings == null) {
             // ["+","*","-","/"]);
             self::$operatorStrings = new Set();
-            foreach ($operators as $oper) {
+            foreach (self::$operators as $oper) {
                 self::$operatorStrings->add($oper->getSymbol());
             }
+            echo "\n\nloaded operator strings ".count(self::$operatorStrings);
         }
     }
 
+    /**
+     * Loads the classes dynamically based on the value of the $operatorClasses variable
+     *
+     * @return array Array of class objects
+     */
     private function loadOperatorClasses() : array {
         $ret = [];
         foreach(self::$operatorClasses as $class) {
@@ -94,7 +101,7 @@ class MathNodeFactory
      * @return bool whether the paramater is a valid (known) operator
      */
     private function isOperator($param) {
-        return $this->operators->contains($param);
+        return self::$operatorStrings->contains($param);
     }
 
     /**
