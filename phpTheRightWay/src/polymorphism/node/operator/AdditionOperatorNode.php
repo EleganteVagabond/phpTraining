@@ -11,7 +11,7 @@ class AdditionOperatorNode extends OperatorNode {
 
     public function evaluate(): float
     {
-        return $this->left->evaluate() * $this->right->evaluate();
+        return $this->left->evaluate() + $this->right->evaluate();
     }
 
     public function getSymbol(): string

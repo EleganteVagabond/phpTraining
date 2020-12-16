@@ -18,5 +18,6 @@ class PolymorphicCalculator
 $factory = new MathNodeFactory();
 $node = $factory->parse("1 + 1");
 var_dump($node);
+echo $node->evaluate();
 
 ?>

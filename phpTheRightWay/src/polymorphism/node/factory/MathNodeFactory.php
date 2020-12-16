@@ -5,6 +5,7 @@ namespace Polymorphism\Node\Factory;
 use Ds\Set;
 use Polymorphism\Node\MathNode;
 use Polymorphism\Node\ValueNode;
+use Polymorphism\Node\OperatorNode;
 use InvalidArgumentException;
 
 /**
@@ -22,14 +23,14 @@ class MathNodeFactory
         // only initialize once
         if (self::$operators == null) {
             self::$operators = $this->loadOperatorClasses();
-            echo "loaded operators ".count(self::$operators);
+            echo "loaded operators ".count(self::$operators)."\n\n";
         }
         // only initialize once
         if (self::$operatorStrings == null) {
             // ["+","*","-","/"]);
             self::$operatorStrings = new Set();
-            foreach (self::$operators as $oper) {
-                self::$operatorStrings->add($oper->getSymbol());
+            foreach (array_keys(self::$operators) as $oper) {
+                self::$operatorStrings->add($oper);
             }
             echo "\n\nloaded operator strings ".count(self::$operatorStrings);
         }
@@ -44,7 +45,8 @@ class MathNodeFactory
         $ret = [];
         foreach(self::$operatorClasses as $class) {
             $className = "\\Polymorphism\\Node\\Operator\\".$class."OperatorNode";
-            $ret[] = new $className();
+            $operator = new $className();
+            $ret[$operator->getSymbol()] = $operator;
         }
         return $ret;
     }
@@ -67,17 +69,16 @@ class MathNodeFactory
      *
      * @param float $operator string representation of the operator
      *
-     * @return MathNode the created node
+     * @return OperatorNode the created node
      */
-    private function buildOperationNode($operator) : MathNode {
+    private function buildOperationNode($operator) : OperatorNode {
         if($this->isOperator($operator) ) {
-            switch ($operator) {
-                // case "+" : return new AdditionOperatorNode(); break;
-                // case "*" : return new MultiplicationOperatorNode(); break;
-                // case "-" : return new MultiplicationOperatorNode(); break;
-                // case "/" : return new MultiplicationOperatorNode(); break;
-                default : throw new InvalidArgumentException("Unimplemented operator: ${operator}");
+            $operClass = self::$operators[$operator];
+            if ($operClass == null) {
+                throw new InvalidArgumentException("Unimplemented operator: ${operator}");
             }
+
+            return clone $operClass;
         }
         throw new InvalidArgumentException("Undefined operator: ${operator}");
     }
@@ -135,8 +136,20 @@ class MathNodeFactory
         if (count($unknown) > 0) {
             throw new InvalidArgumentException("Unknown values in expression ".print_r($unknown));
         }
+        $rootNode = null;
+        while(!empty($operators)) {
+            $oper = array_pop($operators);
+            $operNode = $this->buildOperationNode($oper);
+            if (is_null($rootNode)) {
+                $right = array_pop($values);
+            }else {
+                $right = $rootNode;
+            }
+            $rootNode = $operNode;
+            $left = array_pop($values);
+            $operNode->setOperands($this->buildValueNode($left),$this->buildValueNode($right));
+        }
         # todo build a tree
-        $rootNode = new ValueNode(1);
         return $rootNode;
     }
 }
