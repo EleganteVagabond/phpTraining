@@ -23,7 +23,6 @@ class MathNodeFactory
         // only initialize once
         if (self::$operators == null) {
             self::$operators = $this->loadOperatorClasses();
-            echo "loaded operators ".count(self::$operators)."\n\n";
         }
         // only initialize once
         if (self::$operatorStrings == null) {
@@ -32,7 +31,6 @@ class MathNodeFactory
             foreach (array_keys(self::$operators) as $oper) {
                 self::$operatorStrings->add($oper);
             }
-            echo "\n\nloaded operator strings ".count(self::$operatorStrings);
         }
     }
 
@@ -140,14 +138,13 @@ class MathNodeFactory
         while(!empty($operators)) {
             $oper = array_pop($operators);
             $operNode = $this->buildOperationNode($oper);
+            $right = $rootNode;
             if (is_null($rootNode)) {
-                $right = array_pop($values);
-            }else {
-                $right = $rootNode;
+                $right = $this->buildValueNode(array_pop($values));
             }
             $rootNode = $operNode;
-            $left = array_pop($values);
-            $operNode->setOperands($this->buildValueNode($left),$this->buildValueNode($right));
+            $left = $this->buildValueNode(array_pop($values));
+            $operNode->setOperands($left,$right);
         }
         # todo build a tree
         return $rootNode;
