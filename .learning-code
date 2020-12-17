@@ -4,3 +4,9 @@ Factories
 -this requires more polymorphism, e.g. creating subclasses that do one specific task.
 --might be many small files
 -can really improve speed because less branching and if conditionals are set as global flags at startup then modern jvms will eliminate the branching and inline the bytecode
+
+Abstraction and leverage
+-leverage means you can do more with less work (e.g. one change affects many behaviors via class hierarchies)
+--class hierarchies
+-abstraction is thinking about what things do (e.g. Iterable, Printable, Sendable)
+--interfaces

@@ -119,6 +119,7 @@ class MathNodeFactory
         $unknown = array();
         $exps = explode(" ",$expression);
         foreach ($exps as $exp) {
+            // TODO handle 1 + 2 ok but + 1 2 not okay (or 1 2 +)
             if ($this->isValue($exp)) {
                 array_push($values,$exp);
                 continue;
@@ -133,6 +134,12 @@ class MathNodeFactory
         }
         if (count($unknown) > 0) {
             throw new InvalidArgumentException("Unknown values in expression ".print_r($unknown));
+        }
+        if(count($operators) == 0) {
+            throw new InvalidArgumentException("No operators found in expression. Check format matches 1 + 2");
+        }
+        if(count($values) != count($operators)+1) {
+            throw new InvalidArgumentException("Insufficient values found 1 + 2 + 3 + 5");
         }
         $rootNode = null;
         while(!empty($operators)) {

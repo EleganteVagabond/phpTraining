@@ -87,9 +87,27 @@ final class MathNodeFactoryTest extends TestCase
         $this->factory->parse("5 ^ 3");
     }
 
+    public function testHandlesInvalidOperatorPosition() : void {
+        // $this->expectException(InvalidArgumentException::class);
+        // $this->factory->parse("+ 5 3");
+        $node = $this->factory->parse("+ 5 3 + 6");
+        $this->assertNotNull($node);
+        $this->assertInstanceOf(OperatorNode::class, $node);
+        $this->assertEquals(14,$node->evaluate());
+        $node = $this->factory->parse("5 3 +");
+        $this->assertNotNull($node);
+        $this->assertInstanceOf(OperatorNode::class, $node);
+        $this->assertEquals(8,$node->evaluate());
+    }
+
     public function testHandlesInvalidValues() : void {
         $this->expectException(InvalidArgumentException::class);
         $this->factory->parse("a * b");
+    }
+
+    public function testHandlesInsufficientValues() : void {
+        $this->expectException(InvalidArgumentException::class);
+        $this->factory->parse("1 + 2 3");
     }
 
 }

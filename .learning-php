@@ -118,6 +118,11 @@ Exceptions
 -finally is always executed, even if a try or catch block issues a return statement
 -can create a global handler using set_exception_handler() to define a global catch block, could be used for logging or to increase/decrease the severity of an exception
 
+Static methods
+-referenced using ClassName::method
+-if a static method references self:: then it will only use its implementation, not a sub class
+--to reference a static method in a subclass (overridden) use static::
+
 Security
 -https://phpsecurity.readthedocs.io/en/latest/Introduction.html#yet-another-php-security-book
 -https://owasp.org/www-project-cheat-sheets/
@@ -129,3 +134,48 @@ Security
 --use filter_input([filter type],[value]) to filter input from forms
 -be sure to verify the identity of a server we want to trust using a certification authority
 -be careful when deserializing data
+
+Traits
+-means of bundling functionality a-la a class but not part of a class hierarchy
+--traits can compose other traits
+-cannot implement interfaces
+--directly but the methods in a trait can be used to satisfy an interface
+-can have abstract methods which a 'using' class must implement
+-can define static methods and members
+--static methods/members not shared with other classes or class instances that use the trait
+-can define properties (class scope variables)
+--if using class has a property of the same name it must have same visibility and initial value
+-kind of like implementing an interface except the trait implements the interface for you
+-enables a form of composition without having delegate methods or multiple class inheritance
+--we could just use an instance variable of another class then have methods that mirror the methods of the instance variable but this is complicated, confusing and difficult to maintain
+-Traits cannot be instantiated, only used
+--use [traitname]; or multiple use trait1,trait2, etc...;
+---can specify namespace as well though this takes from the root of the namespace of the class using it
+--if there are conflicts/collisions of attributes then specify which one you want via  { trait1::method insteadof trait2;}
+--can alias a method name using {trait2::method as othermethod; }
+--can alter visibility using [methodname] as protected/private/etc...
+-class which "uses" a trait can access trait functionality as thought it were its own
+--ex: trait A { getThing() {} }, class B { use A; }, new B()->getThing();
+-methods in a trait can be overridden
+-trait methods take precedence over methods inherited in a parent class
+-final keyword is ignored
+-can access variables in the using class, regardless of scope
+-use is a lot like a require or a partial which is inserted into the class "magically" by the runtime environment
+--this insert is a snapshot of the state at the time so if a static var changes later it will not affect any earlier insertions
+
+Why traits
+-can be used to compose common concepts
+-examples
+--readonly trait that comes with getters/setters and a flag
+--iteratable object
+--loggable object, call $object->log() instead of $logger->log(object) ??
+---or allow the class to call log itself without having a logger injected (thought it must be injected into the trait?)
+--event generation?
+-use parent classes for functionality that’s intrinsic to what the object is.
+-share common object mocks among testcases
+-color trait for a shape
+-use traits to wrap other objects for which you only want a subset of methods (but why not make each of the methods a trait?)
+-https://www.rosstuck.com/how-i-use-traits
+
+Assertions
+-https://laravel-news.com/assertion-library-for-php
