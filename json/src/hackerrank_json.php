@@ -9,6 +9,15 @@ echo getcwd()."\n\n";
 // }
 // fclose($dataFile);
 
+function generateJSON($lines) {
+
+    foreach($lines as $record) {
+        $keyedRecord = ["id"=>$record[0]+0, "name"=>$record[1], "manager_id"=>(count($record) == 2 ? null : $record[2]+0)];
+        $records[] = $keyedRecord;
+    }
+    return json_encode($records);
+}
+
 $manager = "Brice Martin";
 // raw data
 // $fileContents = array_map('trim',file("json/src/data.json", FILE_IGNORE_NEW_LINES));

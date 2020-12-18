@@ -29,6 +29,9 @@ Arrays
 -can access elements using either [] or {} syntax
 -if you define an array without using [], e.g. $var = array() then you get an associative array (like a map)
 --to get an indexed array you must use the [] = form e.g. $var[] = array()
+-destructure arrays using list or []
+--[$id,$value] = $idValueArray;
+--list($id,$value) = $idValueArray;
 
 Loops
 -for written in standard notation e.g. for ($i=0; $i < 5; $i++)
