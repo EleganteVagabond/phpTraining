@@ -6,17 +6,12 @@ $bagsAndHolders = [];
 const BAG_DELIM = " bag";
 const BAG_TEST="shiny gold";
 $instructions = [];
-$lastJumpIx = 0;
 foreach($input as $ix=>$bd) {
     $bd = trim($bd);
     // add all the instructions
     $instructions[$ix] = explode(" ",$bd);
     $instructions[$ix][] = false;
-    if($instructions[$ix][0] === "jmp") {
-        $lastJumpIx = $ix;
-    }
 }
-$instructions[$lastJumpIx][0] = "nop";
 // print_r($instructions);
 $currI = 0;
 $accumulator = 0;
@@ -38,4 +33,4 @@ while(!$instructions[$currI][2] ) {
 
 // print_r($bagsAndHolders[BAG_TEST]);
 
-echo "Duplicate instr at $currI, accumulator is $accumulator. Last jump index is $lastJumpIx!";
+echo "Duplicate instr at $currI, accumulator is $accumulator!";
